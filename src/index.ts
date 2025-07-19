@@ -1,40 +1,49 @@
-import { z } from "genkit";
-import { Client } from "pg";
+import { Client, TrafficModel } from "@googlemaps/google-maps-services-js";
+import { defineFlow } from "@genkit-ai/flow";
+import { z } from "zod";
 
-// Define input schema for the database flow
-const DbInputSchema = z.object({
-  user: z.string(),
-  host: z.string(),
-  database: z.string(),
-  password: z.string(),
-  port: z.number(),
-});
+const client = new Client({});
 
-// Define the PostgreSQL flow
-export const postgresFlow = (ai: any) =>
-  ai.defineFlow(
-    {
-      name: "postgresFlow",
-      inputSchema: DbInputSchema,
-      outputSchema: z.any(),
-    },
-    async (input: any) => {
-      const client = new Client({
-        user: input.user,
-        host: input.host,
-        database: input.database,
-        password: input.password,
-        port: input.port,
-      });
-
-      try {
-        await client.connect();
-        const res = await client.query(
-          "SELECT title, description, region from news_articles LIMIT 5;"
-        );
-        return res.rows;
-      } finally {
-        await client.end();
-      }
-    }
+if (!process.env.GOOGLE_MAPS_API_KEY) {
+  throw new Error(
+    "GOOGLE_MAPS_API_KEY environment variable not found. Please set it to your Google Maps API key."
   );
+}
+
+export const streetTrafficFlow = defineFlow(
+  {
+    name: "streetTrafficFlow",
+    inputSchema: z.object({
+      origin: z.string(),
+      destination: z.string(),
+    }),
+    outputSchema: z.any(),
+  },
+  async (input) => {
+    const { origin, destination } = input;
+
+    try {
+      const args = {
+        params: {
+          key: process.env.GOOGLE_MAPS_API_KEY!,
+          departure_time: new Date(Date.now()),
+          traffic_model: TrafficModel.best_guess,
+          origin,
+          destination,
+        },
+        timeout: 1000, // milliseconds
+      };
+
+      const response = await client.directions(args);
+
+      if (response.data.status === "OK") {
+        return response.data.routes;
+      } else {
+        throw new Error(response.data.error_message);
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);

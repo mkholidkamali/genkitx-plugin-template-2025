@@ -1,13 +1,27 @@
-# Genkit Plugin
+# Genkit x Google Maps
 
-This library provides a Genkit flow
+A Genkit plugin that provides real-time traffic information using the Google Maps API.
 
-## API
+## Installation
 
-### `yourFlow(ai)`
+To install the plugin, you need to have Genkit and the Google Maps plugin installed.
 
-Creates a new flow.
+```bash
+npm install genkit @genkit-ai/google-maps
+```
 
--   `ai`: Your Genkit AI instance.
+## Usage
 
-Returns a Genkit flow that you can use to interact with your plugin.
+To use the plugin, you need to have a Google Maps API key. You can get one from the Google Cloud Platform Console.
+
+Once you have the API key, you can use the `streetTrafficFlow` flow to get the traffic information for a specific location.
+
+```ts
+import { streetTrafficFlow } from "@genkit-ai/google-maps";
+
+const traffic = await streetTrafficFlow({
+  address: "1600 Amphitheatre Parkway, Mountain View, CA",
+});
+
+console.log(traffic);
+```

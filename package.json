@@ -1,7 +1,7 @@
 {
-  "name": "genkitx-plugin-template-2025",
+  "name": "genkitx-google-maps",
   "version": "1.0.0",
-  "description": "A Genkit flow that connects to a PostgreSQL database as an example.",
+  "description": "A Genkit plugin for Google Maps.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "keywords": [
     "genkit",
-    "postgres",
+    "google maps",
     "flow"
   ],
   "author": "",
@@ -23,7 +23,8 @@
     "@genkit-ai/flow": "^0.5.17",
     "@genkit-ai/googleai": "^1.15.1",
     "genkit": "^1.15.1",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "@googlemaps/google-maps-services-js": "^3.4.0"
   },
   "files": [
     "lib"
