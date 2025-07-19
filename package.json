@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/google.maps": "^3.55.11",
     "@types/pg": "^8.15.4",
     "typescript": "^5.8.3"
   },
